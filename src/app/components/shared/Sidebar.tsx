@@ -23,7 +23,13 @@ export default function Sidebar() {
       {/* Sidebar Links */}
       <nav className="space-y-4">
         <Link href="/" className="flex items-center gap-2 hover:text-gray-300">
-          🏠 {collapsed ? "" : "Dashboard"}
+          🏠 {collapsed ? "" : "Home"}
+        </Link>
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 hover:text-gray-300"
+        >
+          📊 {collapsed ? "" : "Dashboard"}
         </Link>
         <Link
           href="/tasks"
