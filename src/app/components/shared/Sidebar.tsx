@@ -8,7 +8,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`bg-gray-900 text-white  p-4 transition-all duration-300 ${
+      className={`bg-gray-900 text-white  p-4 transition-all duration-300 border-r border-gray-500 ${
         collapsed ? "w-16 min-h-screen " : "w-1/6"
       }`}
     >
