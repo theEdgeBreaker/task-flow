@@ -7,7 +7,6 @@ import Footer from "./components/Footer";
 
 export default function Home() {
   return (
-    // <div>
     <Layout>
       <Header />
       <Hero />
@@ -15,6 +14,5 @@ export default function Home() {
       <CTA />
       <Footer />
     </Layout>
-    // </div>
   );
 }

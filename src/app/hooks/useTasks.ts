@@ -32,6 +32,38 @@ export function useTasks() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });
 
+  // Edit Task
+
+  // const editMutation = useMutation({
+  //   mutationFn: async (id: number) => {
+  //     console.log("Edit", id);
+
+  //     await fetch(`api/tasks/${id}`, {
+  //       method: "PATCH",
+  //     });
+  //   },
+  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+  // });
+
+  const editMutation = useMutation({
+    mutationFn: async ({
+      id,
+      title,
+      description,
+    }: {
+      id: number;
+      title: string;
+      description: string;
+    }) => {
+      await fetch(`/api/tasks/${id}`, {
+        method: "POST",
+        body: JSON.stringify({ id, title, description }),
+        headers: { "Content-Type": "application/json" },
+      });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+  });
+
   // Update Task
   const updateMutation = useMutation({
     mutationFn: async ({
@@ -43,7 +75,7 @@ export function useTasks() {
     }) => {
       const response = await fetch(`/api/tasks/${id}`, {
         method: "PATCH",
-        body: JSON.stringify({ completed }),
+        body: JSON.stringify({ id, completed }),
         headers: { "Content-Type": "application/json" },
       });
       return response.json();
@@ -54,11 +86,10 @@ export function useTasks() {
   // Delete Task
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      console.log("Aditya", id);
+      console.log("Delete", id);
 
       await fetch(`/api/tasks/${id}`, {
         method: "DELETE",
-        // body: JSON.stringify({ id }),
       });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
@@ -68,6 +99,7 @@ export function useTasks() {
     data: tasks,
     isLoading,
     addMutation,
+    editMutation,
     updateMutation,
     deleteMutation,
   };

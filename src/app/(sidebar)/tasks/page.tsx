@@ -1,5 +1,6 @@
 "use client";
 
+// import { Task } from "@/types";
 import { useState } from "react";
 import Layout from "@/app/components/shared/Layout";
 import { useTasks } from "../../hooks/useTasks";
@@ -9,6 +10,7 @@ export default function Tasks() {
     data: tasks,
     isLoading,
     addMutation,
+    editMutation,
     updateMutation,
     deleteMutation,
   } = useTasks();
@@ -23,7 +25,7 @@ export default function Tasks() {
       <h1 className="text-2xl font-bold">Tasks</h1>
       <p>Manage your tasks efficiently!</p>
 
-      {/* ✅ Task Add Karne Ka Form */}
+      {/* Task Adding Form*/}
       <div className="mt-4">
         <input
           type="text"
@@ -52,7 +54,7 @@ export default function Tasks() {
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             });
-            setTitle(""); // ✅ Input clear karne ke liye
+            setTitle(""); // Clearing Input
             setDescription("");
           }}
         >
@@ -60,7 +62,7 @@ export default function Tasks() {
         </button>
       </div>
 
-      {/* ✅ Task List */}
+      {/* Task List */}
       <ul className="mt-4 space-y-2">
         {tasks?.map((task) => (
           <li
@@ -72,7 +74,23 @@ export default function Tasks() {
             >
               {task.title} - {task.description}
             </span>
+
             <div>
+              <button
+                className=" mr-2 text-yellow-500"
+                onClick={() => {
+                  console.log("Selena", task.id, task.title);
+
+                  editMutation.mutate({
+                    id: task.id,
+                    title: task.title,
+                    description: "Sanjana",
+                  });
+                }}
+              >
+                ✏️
+              </button>
+
               <button
                 className="mr-2 text-green-500"
                 onClick={() =>
@@ -84,6 +102,7 @@ export default function Tasks() {
               >
                 ✅
               </button>
+
               <button
                 className="text-red-500"
                 onClick={() => deleteMutation.mutate(task.id)}
