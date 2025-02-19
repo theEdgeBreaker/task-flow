@@ -1,6 +1,5 @@
 "use client";
 
-// src/hooks/useTasks.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Task } from "@/types";
 
@@ -33,31 +32,21 @@ export function useTasks() {
   });
 
   // Edit Task
-
-  // const editMutation = useMutation({
-  //   mutationFn: async (id: number) => {
-  //     console.log("Edit", id);
-
-  //     await fetch(`api/tasks/${id}`, {
-  //       method: "PATCH",
-  //     });
-  //   },
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
-  // });
-
   const editMutation = useMutation({
     mutationFn: async ({
       id,
       title,
       description,
+      priority,
     }: {
       id: number;
       title: string;
       description: string;
+      priority: number;
     }) => {
       await fetch(`/api/tasks/${id}`, {
         method: "POST",
-        body: JSON.stringify({ id, title, description }),
+        body: JSON.stringify({ id, title, description, priority }),
         headers: { "Content-Type": "application/json" },
       });
     },

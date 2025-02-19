@@ -1,5 +1,5 @@
 {
-  "id": "039e0b9f-78ff-40dd-8e87-496b4f191f98",
+  "id": "ce3f5c8d-79aa-4c0a-9ae9-e24f10274170",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,7 +10,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
@@ -32,6 +32,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": false
+        },
+        "priority": {
+          "name": "priority",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 2
         },
         "created_at": {
           "name": "created_at",

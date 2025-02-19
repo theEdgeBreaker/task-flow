@@ -42,13 +42,16 @@ export async function PATCH(req: Request) {
 // Edit task status
 
 export async function POST(req: Request) {
-  console.log("Selena wants to edit");
+  console.log("Editing Task");
 
   try {
-    const { id, title, description } = await req.json();
-    console.log("SELENA Editing task", id, title, description);
+    const { id, title, description, priority } = await req.json();
+    console.log("Editing Task", id, title, description, priority);
 
-    await db.update(tasks).set({ title, description }).where(eq(tasks.id, id));
+    await db
+      .update(tasks)
+      .set({ title, description, priority })
+      .where(eq(tasks.id, id));
 
     return NextResponse.json({ success: true });
   } catch (error) {

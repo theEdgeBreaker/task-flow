@@ -16,16 +16,46 @@ export default function Tasks() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState(2); // Default: Medium priority
 
-  // Add these states for editing
+  // Edit states
   const [isEditing, setIsEditing] = useState(false);
   const [editingTask, setEditingTask] = useState<{
     id: number;
     title: string;
     description: string;
+    priority: number;
   } | null>(null);
 
   if (isLoading) return <p>Loading tasks...</p>;
+
+  // Helper function to get priority color
+  const getPriorityColor = (priority: number) => {
+    switch (priority) {
+      case 1:
+        return "bg-red-100 text-red-800"; // High
+      case 2:
+        return "bg-yellow-100 text-yellow-800"; // Medium
+      case 3:
+        return "bg-green-100 text-green-800"; // Low
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  // Helper function to get priority label
+  const getPriorityLabel = (priority: number) => {
+    switch (priority) {
+      case 1:
+        return "High";
+      case 2:
+        return "Medium";
+      case 3:
+        return "Low";
+      default:
+        return "Medium";
+    }
+  };
 
   return (
     <Layout>
@@ -48,20 +78,37 @@ export default function Tasks() {
           onChange={(e) => setDescription(e.target.value)}
           className="border p-2 rounded w-full mt-2"
         />
+
+        {/* Priority Selector */}
+        <div className="mt-2">
+          <label className="block text-sm font-medium mb-1">Priority</label>
+          <select
+            value={priority}
+            onChange={(e) => setPriority(Number(e.target.value))}
+            className="border p-2 rounded w-full"
+          >
+            <option value={1}>High</option>
+            <option value={2}>Medium</option>
+            <option value={3}>Low</option>
+          </select>
+        </div>
+
         <button
           className="mt-4 p-2 bg-blue-600 text-white rounded"
           onClick={() => {
-            if (title.trim() === "" && description.trim() === "") return;
+            if (title.trim() === "") return;
             addMutation.mutate({
               id: Math.floor(1000 * Math.random()),
               title,
               description,
               completed: false,
+              priority, // Add priority here
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             });
-            setTitle(""); // Clearing Input
+            setTitle("");
             setDescription("");
+            setPriority(2); // Reset to medium
           }}
         >
           Add Task
@@ -70,16 +117,29 @@ export default function Tasks() {
 
       {/* Task List */}
       <ul className="mt-4 space-y-2">
-        {tasks.map((task) => (
+        {tasks?.map((task) => (
           <li
             key={task.id}
             className="flex items-center justify-between p-2 border rounded"
           >
-            <span
-              className={task.completed ? "line-through text-gray-500" : ""}
-            >
-              {task.title} - {task.description}
-            </span>
+            <div className="flex items-center gap-2">
+              <span
+                className={`${
+                  task.completed ? "line-through text-gray-500" : ""
+                } flex-1`}
+              >
+                {task.title} - {task.description}
+              </span>
+
+              {/* Priority Badge */}
+              <span
+                className={`px-2 py-1 text-xs rounded-full ${getPriorityColor(
+                  task.priority
+                )}`}
+              >
+                {getPriorityLabel(task.priority)}
+              </span>
+            </div>
 
             <div>
               <button
@@ -89,6 +149,7 @@ export default function Tasks() {
                     id: task.id,
                     title: task.title,
                     description: task.description,
+                    priority: task.priority,
                   });
                   setIsEditing(true);
                 }}
@@ -127,7 +188,6 @@ export default function Tasks() {
               value={editingTask.title}
               onChange={(e) =>
                 setEditingTask({
-                  // title - sanjana = editingTask ...editingTask , title
                   ...editingTask,
                   title: e.target.value,
                 })
@@ -143,8 +203,25 @@ export default function Tasks() {
                   description: e.target.value,
                 })
               }
-              className="border p-2 rounded w-full mb-4"
+              className="border p-2 rounded w-full mb-2"
             />
+
+            {/* Priority Selector in Edit Modal */}
+            <select
+              value={editingTask.priority}
+              onChange={(e) =>
+                setEditingTask({
+                  ...editingTask,
+                  priority: Number(e.target.value),
+                })
+              }
+              className="border p-2 rounded w-full mb-4"
+            >
+              <option value={1}>High</option>
+              <option value={2}>Medium</option>
+              <option value={3}>Low</option>
+            </select>
+
             <div className="flex justify-end gap-2">
               <button
                 className="p-2 bg-gray-500 text-white rounded"
@@ -164,6 +241,7 @@ export default function Tasks() {
                     id: editingTask.id,
                     title: editingTask.title,
                     description: editingTask.description,
+                    priority: editingTask.priority,
                   });
 
                   setIsEditing(false);

@@ -1,1 +1,0 @@
-ALTER TABLE "tasks" ALTER COLUMN "id" SET DATA TYPE serial;

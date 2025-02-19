@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db/drizzle"; // drizzle instance
 import { tasks } from "@/db/schema"; // Tasks schema
-// import { eq } from "drizzle-orm";
 
 // Fetch all tasks
 export async function GET() {
@@ -10,16 +9,11 @@ export async function GET() {
 }
 
 // Add a new task
-// export async function POST(req: Request) {
-//   const { title, description } = await req.json();
-//   await db.insert(tasks).values({ title, description, completed: false });
-//   return NextResponse.json({ success: true });
-// }
 
 export async function POST(req: Request) {
   // console.log("sanjana");
   try {
-    const { title, description, id } = await req.json();
+    const { title, description, id, priority } = await req.json();
 
     // console.log("Selena", title, description, id);
 
@@ -34,6 +28,7 @@ export async function POST(req: Request) {
         id,
         title,
         description,
+        priority: priority || 2,
         completed: false,
       })
       .returning();

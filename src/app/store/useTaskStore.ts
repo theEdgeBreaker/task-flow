@@ -5,7 +5,12 @@ interface TaskStore {
   tasks: Task[];
   setTasks: (tasks: Task[]) => void;
   addTask: (task: Task) => void;
-  editTask: (id: number, title: string, description: string) => void;
+  editTask: (
+    id: number,
+    title: string,
+    description: string,
+    priority: number
+  ) => void;
   updateTask: (id: number, completed: boolean) => void;
   deleteTask: (id: number) => void;
 }
@@ -16,11 +21,13 @@ export const useTaskStore = create<TaskStore>((set) => ({
     console.log("Setting tasks:", tasks);
     set({ tasks });
   },
+  // Add Task functionality
   addTask: (task) => {
     console.log("Adding task:", task);
     set((state) => ({ tasks: [...state.tasks, task] }));
   },
 
+  // Update Task unctionality
   updateTask: (id, completed) => {
     console.log("Updating task:", id, completed);
     set((state) => ({
@@ -29,14 +36,16 @@ export const useTaskStore = create<TaskStore>((set) => ({
       ),
     }));
   },
+  // Delete Task functionality
   deleteTask: (id) => {
     console.log("Deleting task:", id);
     set((state) => ({ tasks: state.tasks.filter((task) => task.id !== id) }));
   },
-  editTask: (id, title, description) => {
+  // Edit Task functionality
+  editTask: (id, title, description, priority) => {
     set((state) => ({
       tasks: state.tasks.map((task) =>
-        task.id === id ? { ...task, title, description } : task
+        task.id === id ? { ...task, title, description, priority } : task
       ),
     }));
   },
