@@ -6,22 +6,26 @@ import { eq } from "drizzle-orm";
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   console.log("Hello from routes..........");
 
   try {
     // const { id } = await req.json();
-    const taskId = Number(params.id); // Convert id from string to number
+    const taskId = Number(context.params.id); // Convert id from string to number
     console.log(taskId);
 
-    if (!taskId) NextResponse.json({ success: false, msg: "ID not found" });
+    if (!taskId) {
+      return NextResponse.json({ success: false, msg: "ID not found" });
+    }
+
     await db.delete(tasks).where(eq(tasks.id, taskId));
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.log("Selna wants to delete task");
+    console.log("Selena wants to delete task");
 
     console.log("error in DELETE function", error);
+    return NextResponse.json({ success: false, msg: "Server Error" });
   }
 }
 
