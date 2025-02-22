@@ -8,6 +8,27 @@
       "when": 1739974955263,
       "tag": "0000_robust_longshot",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1740023526775,
+      "tag": "0001_wide_sauron",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740025452090,
+      "tag": "0002_spotty_flatman",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1740025604282,
+      "tag": "0003_flawless_vengeance",
+      "breakpoints": true
     }
   ]
 }

@@ -17,15 +17,34 @@ export function useTasks() {
   });
 
   // Add Task
-  const addMutation = useMutation({
-    mutationFn: async (newTask: Task) => {
-      console.log(newTask);
+  // const addMutation = useMutation({
+  //   mutationFn: async (newTask: Task) => {
+  //     console.log(newTask);
 
+  //     const response = await fetch("/api/tasks", {
+  //       method: "POST",
+  //       body: JSON.stringify(newTask),
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  //     return response.json();
+  //   },
+  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+  // });
+
+  // Add Task
+  const addMutation = useMutation({
+    mutationFn: async (
+      newTask: Omit<Task, "id" | "createdAt" | "updatedAt">
+    ) => {
       const response = await fetch("/api/tasks", {
         method: "POST",
         body: JSON.stringify(newTask),
         headers: { "Content-Type": "application/json" },
       });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to create task");
+      }
       return response.json();
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
@@ -38,15 +57,26 @@ export function useTasks() {
       title,
       description,
       priority,
+      dueDate,
+      projectId,
     }: {
       id: number;
       title: string;
       description: string;
       priority: number;
+      dueDate?: string;
+      projectId?: number;
     }) => {
       await fetch(`/api/tasks/${id}`, {
         method: "POST",
-        body: JSON.stringify({ id, title, description, priority }),
+        body: JSON.stringify({
+          id,
+          title,
+          description,
+          priority,
+          dueDate,
+          projectId,
+        }),
         headers: { "Content-Type": "application/json" },
       });
     },
@@ -73,13 +103,35 @@ export function useTasks() {
   });
 
   // Delete Task
+  // const deleteMutation = useMutation({
+  //   mutationFn: async (id: number) => {
+  //     console.log("Delete", id);
+
+  //     const response = await fetch(`/api/tasks/${id}`, {
+  //       body: JSON.stringify({ id }),
+  //       method: "DELETE",
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  //     console.log(response);
+
+  //     return await response.json();
+  //   },
+  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+  // });
+
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       console.log("Delete", id);
 
-      await fetch(`/api/tasks/${id}`, {
+      const response = await fetch(`/api/tasks/${id}`, {
+        // ✅ Send id in URL
+        body: JSON.stringify({ id }),
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
       });
+
+      console.log(response);
+      return await response.json();
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
   });

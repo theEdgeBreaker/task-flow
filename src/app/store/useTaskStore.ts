@@ -9,7 +9,9 @@ interface TaskStore {
     id: number,
     title: string,
     description: string,
-    priority: number
+    priority: number,
+    dueDate?: string,
+    projectId?: number
   ) => void;
   updateTask: (id: number, completed: boolean) => void;
   deleteTask: (id: number) => void;
@@ -42,10 +44,19 @@ export const useTaskStore = create<TaskStore>((set) => ({
     set((state) => ({ tasks: state.tasks.filter((task) => task.id !== id) }));
   },
   // Edit Task functionality
-  editTask: (id, title, description, priority) => {
+  editTask: (id, title, description, priority, dueDate, projectId) => {
     set((state) => ({
       tasks: state.tasks.map((task) =>
-        task.id === id ? { ...task, title, description, priority } : task
+        task.id === id
+          ? {
+              ...task,
+              title,
+              description,
+              priority,
+              dueDate: dueDate || task.dueDate,
+              projectId: projectId !== undefined ? projectId : task.projectId,
+            }
+          : task
       ),
     }));
   },
